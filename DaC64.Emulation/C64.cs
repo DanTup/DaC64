@@ -12,6 +12,7 @@ namespace DanTup.DaC64.Emulation
 		internal Memory Ram { get; set; }
 		internal Cpu6502 Cpu { get; set; }
 		internal Bitmap Screen { get; } = new Bitmap(256, 240);
+		Vic2 Vic2;
 
 		const ushort ResetVector = 0xFFFC;
 		const ushort InitialStackPointer = 0x01FF;
@@ -20,6 +21,7 @@ namespace DanTup.DaC64.Emulation
 		{
 			Ram = new Memory(0x10000);
 			Cpu = new Cpu6502(Ram, resetVector: ResetVector, stackPointer: InitialStackPointer);
+			Vic2 = new Vic2(Ram, Screen);
 
 			CpuCycleDurationMilliseconds = 1.0f / 1000000; /* 1Mhz... PAL slightly slower, NTSC slightly faster. Let's see if we can ignore that for now... */
 		}
@@ -29,23 +31,35 @@ namespace DanTup.DaC64.Emulation
 		public void Run(Action<Bitmap> drawFrame)
 		{
 			var sw = new Stopwatch();
+			int? outstandingCpuCycles = 0;
+			var badline = false; // When VIC2 returns badline, we have to skip CPU rendering because it's using the cycles
 			while (true)
 			{
-				sw.Start();
-				var cpuCyclesSpent = Cpu.Step();
+				// Loop for a full screen frame
+				for (var i = 0; i < 504 * 312; i++)
+				{
+					sw.Reset();
+					sw.Start();
 
-				// If we get null back, the program has ended/hit unknown opcode.
-				if (cpuCyclesSpent == null)
-					return;
+					// If we're not still "processing" the previous instruction, then do next one.
+					if (outstandingCpuCycles == 0)
+						outstandingCpuCycles = Cpu.Step();
 
-				// TODO: ...?
-				//if (timeToRender)
-				//	drawFrame?.Invoke(Screen);
+					// If we get null back, the program has ended/hit unknown opcode.
+					if (outstandingCpuCycles == null)
+						return;
 
-				// Sleep until it's time for the next cycle.
-				var timeToSleep = cpuCyclesSpent.Value * (CpuCycleDurationMilliseconds - sw.ElapsedMilliseconds);
-				if (timeToSleep > 0)
-					Thread.Sleep((int)timeToSleep);
+					// http://dustlayer.com/vic-ii/2013/4/25/vic-ii-for-beginners-beyond-the-screen-rasters-cycle
+					badline = Vic2.Process(i);
+
+					// Sleep until it's time for the next cycle.
+					var timeToSleep = (CpuCycleDurationMilliseconds - sw.ElapsedMilliseconds);
+					if (timeToSleep > 0)
+						Thread.Sleep((int)timeToSleep);
+				}
+
+				// Now render
+				drawFrame?.Invoke(Screen);
 			}
 		}
 

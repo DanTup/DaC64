@@ -46,6 +46,7 @@
     <Compile Include="Cpu6502.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="C64.cs" />
+    <Compile Include="Vic2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
