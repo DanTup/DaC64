@@ -5,6 +5,8 @@ namespace DanTup.DaC64.Emulation
 {
 	class Cpu6502 : Cpu
 	{
+		public ushort ResetVector { get; private set; }
+
 		// Registers.
 		public byte Accumulator { get; internal set; }
 		public byte XRegister { get; internal set; }
@@ -260,10 +262,10 @@ namespace DanTup.DaC64.Emulation
 		/// </summary>
 		readonly Dictionary<OpCode, Action> opCodes;
 
-		public Cpu6502(Memory ram, ushort programCounter, ushort stackPointer)
+		public Cpu6502(Memory ram, ushort resetVector, ushort stackPointer)
 			: base(ram)
 		{
-			this.ProgramCounter = programCounter;
+			this.ResetVector = resetVector;
 			this.StackPointer = stackPointer;
 
 			// Build a dictionary of known OpCodes.
@@ -509,6 +511,12 @@ namespace DanTup.DaC64.Emulation
 				{ OpCode.DEC_ABS,    () => DEC(Absolute())     },
 				{ OpCode.DEC_ABS_X,  () => DEC(AbsoluteX())    },
 			};
+		}
+
+		internal void Reset()
+		{
+			this.ProgramCounter = FromBytes(Ram.Read(ResetVector), (byte)(Ram.Read(ResetVector) + 1));
+
 		}
 
 		internal virtual int? Step()
@@ -813,7 +821,7 @@ namespace DanTup.DaC64.Emulation
 		}
 
 		byte[] ToBytes(ushort value) => new[] { (byte)(value >> 8), (byte)value };
-		protected ushort FromBytes(byte b1, byte b2) => (ushort)(b1 | b2 << 8);
+		protected ushort FromBytes(byte low, byte hi) => (ushort)(hi << 8 | low);
 
 		void Branch(bool condition) => BranchIf(condition, (sbyte)ReadNext());
 		void BranchIf(bool condition, sbyte offset) => ProgramCounter += (ushort)(condition ? offset : 0);

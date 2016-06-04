@@ -12,13 +12,13 @@ namespace DanTup.DaC64.Emulation
 		internal Cpu6502 Cpu { get; set; }
 		internal Bitmap Screen { get; } = new Bitmap(256, 240);
 
-		protected const ushort InitialProgramCounter = 0xC004; /* TOOD: This is correct for nestest (non-automated), but we need to read from reset vector */
-		protected const ushort InitialStackPointer = 0xFD;
+		const ushort ResetVector = 0xFFFC;
+		const ushort InitialStackPointer = 0x01FF;
 
 		public C64()
 		{
 			Ram = new Memory(0xFFFF);
-			Cpu = new Cpu6502(Ram, programCounter: InitialProgramCounter, stackPointer: InitialStackPointer);
+			Cpu = new Cpu6502(Ram, resetVector: ResetVector, stackPointer: InitialStackPointer);
 
 			var cpuSpeed = 21.477272 / 12;
 			CpuCycleDurationMilliseconds = 1.0f / cpuSpeed;
@@ -55,6 +55,7 @@ namespace DanTup.DaC64.Emulation
 		public void LoadProgram(params byte[] program)
 		{
 			Ram.Write(0, program);
+			Cpu.Reset();
 		}
 	}
 }
