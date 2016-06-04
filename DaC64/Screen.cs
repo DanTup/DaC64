@@ -17,7 +17,7 @@ namespace DanTup.DaC64
 			InitializeComponent();
 
 			var program = File.ReadAllBytes(RomFile);
-			c64.LoadProgram(program);
+			c64.LoadKernelRom(program);
 
 			Task.Run(() => c64.Run(UpdateScreen));
 		}

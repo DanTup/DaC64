@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 
 namespace DanTup.DaC64.Emulation
@@ -52,9 +53,10 @@ namespace DanTup.DaC64.Emulation
 		/// <summary>
 		/// Loads a program for the CPU to execute.
 		/// </summary>
-		public void LoadProgram(params byte[] program)
+		public void LoadKernelRom(params byte[] program)
 		{
-			Ram.Write(0, program);
+			Ram.Write(0xA000, new ArraySegment<byte>(program, 0, 0x2000).ToArray());
+			Ram.Write(0xE000, new ArraySegment<byte>(program, 0x2000, 0x2000).ToArray());
 			Cpu.Reset();
 		}
 	}
