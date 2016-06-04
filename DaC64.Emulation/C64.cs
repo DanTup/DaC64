@@ -11,7 +11,7 @@ namespace DanTup.DaC64.Emulation
 		internal double CpuCycleDurationMilliseconds { get; set; }
 		internal Memory Ram { get; set; }
 		internal Cpu6502 Cpu { get; set; }
-		internal Bitmap Screen { get; } = new Bitmap(256, 240);
+		internal Bitmap Screen { get; } = new Bitmap(320, 200);
 		Vic2 Vic2;
 
 		const ushort ResetVector = 0xFFFC;
