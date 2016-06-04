@@ -54,7 +54,7 @@ namespace DanTup.DaC64.Emulation
 		/// </summary>
 		public void LoadProgram(params byte[] program)
 		{
-			throw new NotImplementedException();
+			Ram.Write(0, program);
 		}
 	}
 }
