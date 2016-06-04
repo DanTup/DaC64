@@ -36,18 +36,24 @@ namespace DanTup.DaC64.Emulation
 			while (true)
 			{
 				// Loop for a full screen frame
-				for (var i = 0; i < 504 * 312; i++)
+				for (var i = 0; i < 504 * 312 / 8; i++)
 				{
 					sw.Reset();
 					sw.Start();
 
-					// If we're not still "processing" the previous instruction, then do next one.
-					if (outstandingCpuCycles == 0)
-						outstandingCpuCycles = Cpu.Step();
+					// If we're not a badline (eg. VIC2 gets the cycle), process CPU
+					if (!badline)
+					{
+						// If we're not still "processing" the previous instruction, then do next one.
+						if (outstandingCpuCycles == 0)
+							outstandingCpuCycles = Cpu.Step();
 
-					// If we get null back, the program has ended/hit unknown opcode.
-					if (outstandingCpuCycles == null)
-						return;
+						// If we get null back, the program has ended/hit unknown opcode.
+						if (outstandingCpuCycles == null)
+							return;
+
+						outstandingCpuCycles--;
+					}
 
 					// http://dustlayer.com/vic-ii/2013/4/25/vic-ii-for-beginners-beyond-the-screen-rasters-cycle
 					badline = Vic2.Process(i);
