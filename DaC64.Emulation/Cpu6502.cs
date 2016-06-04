@@ -522,6 +522,7 @@ namespace DanTup.DaC64.Emulation
 
 		internal virtual int? Step()
 		{
+			Debug.Write(string.Format("\r\n{0:X} ", ProgramCounter));
 			var origPC = ProgramCounter;
 			var instr = ReadNext();
 			if (instr == 0)
@@ -531,9 +532,9 @@ namespace DanTup.DaC64.Emulation
 			if (!opCodes.ContainsKey(opCode))
 				throw new InvalidOperationException(string.Format("Unknown opcode: 0x{0}", instr.ToString("X2")));
 
-			Debug.WriteLine(string.Format("{0:X}: {1:X}", origPC, opCode));
-
 			opCodes[opCode]();
+
+			Debug.Write(string.Format("{0} ", opCode.ToString()));
 
 			// TODO: Count costs...
 			var cyclesSpent = 1;
@@ -788,7 +789,12 @@ namespace DanTup.DaC64.Emulation
 			return (ushort)(FromBytes(Ram.Read(addr1), Ram.Read((ushort)(addr2 % 256))) + YRegister);
 		}
 
-		internal virtual byte ReadNext() => Ram.Read(ProgramCounter++);
+		internal virtual byte ReadNext()
+		{
+			var b = Ram.Read(ProgramCounter++);
+			Debug.Write(string.Format("{0:X} ", b));
+			return b;
+		}
 
 		byte SetZN(byte value)
 		{
