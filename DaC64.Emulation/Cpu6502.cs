@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DanTup.DaC64.Emulation
 {
@@ -515,12 +516,13 @@ namespace DanTup.DaC64.Emulation
 
 		internal void Reset()
 		{
-			this.ProgramCounter = FromBytes(Ram.Read(ResetVector), (byte)(Ram.Read(ResetVector) + 1));
+			this.ProgramCounter = FromBytes(Ram.Read(ResetVector), (Ram.Read((ushort)(ResetVector + 1))));
 
 		}
 
 		internal virtual int? Step()
 		{
+			var origPC = ProgramCounter;
 			var instr = ReadNext();
 			if (instr == 0)
 				return null;
@@ -528,6 +530,8 @@ namespace DanTup.DaC64.Emulation
 			var opCode = (OpCode)instr;
 			if (!opCodes.ContainsKey(opCode))
 				throw new InvalidOperationException(string.Format("Unknown opcode: 0x{0}", instr.ToString("X2")));
+
+			Debug.WriteLine(string.Format("{0:X}: {1:X}", origPC, opCode));
 
 			opCodes[opCode]();
 

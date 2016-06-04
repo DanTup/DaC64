@@ -18,11 +18,10 @@ namespace DanTup.DaC64.Emulation
 
 		public C64()
 		{
-			Ram = new Memory(0xFFFF);
+			Ram = new Memory(0x10000);
 			Cpu = new Cpu6502(Ram, resetVector: ResetVector, stackPointer: InitialStackPointer);
 
-			var cpuSpeed = 21.477272 / 12;
-			CpuCycleDurationMilliseconds = 1.0f / cpuSpeed;
+			CpuCycleDurationMilliseconds = 1.0f / 1000000; /* 1Mhz... PAL slightly slower, NTSC slightly faster. Let's see if we can ignore that for now... */
 		}
 
 		public void Run() => Run(null);
