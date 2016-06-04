@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaC64", "DaC64\DaC64.csproj", "{8916C1C0-4983-4B2F-B89C-986471794AD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaC64.Emulation", "DaC64.Emulation\DaC64.Emulation.csproj", "{E59F2378-D41D-49FF-BB36-24A8ED668838}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8916C1C0-4983-4B2F-B89C-986471794AD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8916C1C0-4983-4B2F-B89C-986471794AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8916C1C0-4983-4B2F-B89C-986471794AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8916C1C0-4983-4B2F-B89C-986471794AD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E59F2378-D41D-49FF-BB36-24A8ED668838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E59F2378-D41D-49FF-BB36-24A8ED668838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E59F2378-D41D-49FF-BB36-24A8ED668838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E59F2378-D41D-49FF-BB36-24A8ED668838}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
