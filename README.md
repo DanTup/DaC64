@@ -1,4 +1,5 @@
-# DaC64
+# DaC64 [![Build status](https://ci.appveyor.com/api/projects/status/github/DanTup/DaC64?svg=true)](https://ci.appveyor.com/project/DanTup/dac64)
+
 [DanTup](https://github.com/DanTup/)'s attempt to make a C64 emulator in C#.
 
 This is entirely a learning excercise so it is very unlikely to produce a stable polished emulator anytime soon (if ever). If you're looking for something to play C64 games, this probably isn't it!
